@@ -2,7 +2,7 @@
     <update handle="styles"/>
     <body>
         <referenceContainer name="content">
-            <block class="Bulbulatory\Recommendations\Block\Adminhtml\ListHeader" name="bulbulatory_recommendations_admin_list_header" template="Bulbulatory_Recommendations::list_header.phtml" />
+            <uiComponent name="bulbulatory_recommendations_listing"/>
         </referenceContainer>
     </body>
 </page>

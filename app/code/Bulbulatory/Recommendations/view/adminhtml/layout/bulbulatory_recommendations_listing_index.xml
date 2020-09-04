@@ -1,0 +1,8 @@
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="styles"/>
+    <body>
+        <referenceContainer name="content">
+            <block class="Bulbulatory\Recommendations\Block\Adminhtml\ListHeader" name="bulbulatory_recommendations_admin_list_header" template="Bulbulatory_Recommendations::list_header.phtml" />
+        </referenceContainer>
+    </body>
+</page>

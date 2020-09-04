@@ -9,7 +9,7 @@
         <column xsi:type="varchar" name="email" nullable="false" length="255" comment="Recommended email"/>
         <column xsi:type="varchar" name="hash" nullable="false" length="255" comment="UUID hash"/>
         <column xsi:type="boolean" name="status" default="0" comment="Status of recommendation"/>
-        <column xsi:type="datetime" name="created_at" default="NOW()" on_update="false" nullable="false"
+        <column xsi:type="datetime" name="created_at" default="CURRENT_TIMESTAMP" on_update="false" nullable="false"
                 comment="Creation date of recommendation"/>
         <column xsi:type="datetime" name="confirmed_at" on_update="false" nullable="true"
                 comment="Date of confirmation of recommendation"/>

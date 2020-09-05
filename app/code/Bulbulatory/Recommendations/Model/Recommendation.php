@@ -4,6 +4,7 @@ namespace Bulbulatory\Recommendations\Model;
 
 use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Model\AbstractModel;
+use Bulbulatory\Recommendations\Model\ResourceModel\Recommendation as RecommendationResource;
 
 /**
  * Class Recommendation
@@ -17,7 +18,7 @@ class Recommendation extends AbstractModel implements IdentityInterface
 
     protected function _construct()
     {
-        $this->_init('Bulbulatory\Recommendations\Model\ResourceModel\Recommendation');
+        $this->_init(RecommendationResource::class);
     }
 
     public function getIdentities()

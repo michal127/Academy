@@ -3,6 +3,8 @@
 namespace Bulbulatory\Recommendations\Model\ResourceModel\Recommendation;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
+use Bulbulatory\Recommendations\Model\Recommendation as RecommendationModel;
+use Bulbulatory\Recommendations\Model\ResourceModel\Recommendation as RecommendationResource;
 
 /**
  * Class Collection
@@ -18,6 +20,6 @@ class Collection extends AbstractCollection
 
     protected function _construct()
     {
-        $this->_init('Bulbulatory\Recommendations\Model\Recommendation', 'Bulbulatory\Recommendations\Model\ResourceModel\Recommendation');
+        $this->_init(RecommendationModel::class, RecommendationResource::class);
     }
 }

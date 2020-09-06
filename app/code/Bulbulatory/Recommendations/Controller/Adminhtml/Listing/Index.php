@@ -14,6 +14,7 @@ use Magento\Framework\View\Result\PageFactory;
  */
 class Index extends Action
 {
+    const RECOMMENDATIONS_LISTING_GRID_RESOURCE = 'Bulbulatory_Recommendations::recommendations_listing_grid';
 
     /**
      * @var PageFactory
@@ -40,5 +41,14 @@ class Index extends Action
         $resultPage->getConfig()->getTitle()->prepend((__('Recommendations list')));
 
         return $resultPage;
+    }
+
+    /**
+     * Blocking access to action by grid listing resource
+     * @return bool
+     */
+    protected function _isAllowed()
+    {
+        return $this->_authorization->isAllowed(self::RECOMMENDATIONS_LISTING_GRID_RESOURCE);
     }
 }

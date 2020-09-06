@@ -4,7 +4,8 @@
         <resources>
             <resource id="Magento_Backend::admin">
                 <resource id="Bulbulatory_Recommendations::recommendations_module" title="Customers recommendations" sortOrder="51">
-                    <resource id="Bulbulatory_Recommendations::recommendations_listing_grid" title="Recommendations list" sortOrder="10"/>
+                    <resource id="Bulbulatory_Recommendations::recommendations_config" title="Module configuration" sortOrder="10"/>
+                    <resource id="Bulbulatory_Recommendations::recommendations_listing_grid" title="Recommendations list" sortOrder="20"/>
                 </resource>
             </resource>
         </resources>

@@ -17,6 +17,7 @@ class Collection extends SearchResult
     /**
      * Extension of base _initSelect
      * Adding sender_email from joined customer_entity table for admin grid
+     * Adding filters maps to columns
      * @return Collection|void
      */
     protected function _initSelect()
@@ -28,7 +29,11 @@ class Collection extends SearchResult
             ['sender_email' => 'email']
         );
 
-
         $this->addFilterToMap('sender_email', 'customer.email');
+        $this->addFilterToMap('email', 'main_table.email');
+        $this->addFilterToMap('hash', 'main_table.hash');
+        $this->addFilterToMap('status', 'main_table.status');
+        $this->addFilterToMap('created_at', 'main_table.created_at');
+        $this->addFilterToMap('confirmed_at', 'main_table.confirmed_at');
     }
 }

@@ -32,18 +32,22 @@ class Delete extends Action
 
     public function execute()
     {
-        //TODO finish delete action
         $id = (int)$this->_request->getParam('id');
         $resultRedirect = $this->resultRedirectFactory->create();
-        $recoModel = $this->recommendationFactory->create();
-        try {
-            $recoModel->load($id);
-            $recoModel->delete();
-            $this->messageManager->addSuccessMessage(__('Recommendation record deleted!'));
-        } catch (\Exception $exception) {
-            $this->messageManager->addErrorMessage(__('An erroor occured while deleting row'));
+
+        if (!empty($id)) {
+            try {
+                $recommendationModel = $this->recommendationFactory->create();
+                $recommendationModel->load($id);
+                $recommendationModel->delete();
+                $this->messageManager->addSuccessMessage(__('Recommendation with ID: ' . $id . ' deleted!'));
+            } catch (\Exception $exception) {
+                $this->messageManager->addErrorMessage(__('An error occurred while deleting row'));
+            }
+        } else {
+            $this->messageManager->addErrorMessage(__('Invalid request'));
         }
-       return $resultRedirect->setPath('bulbulatory_recommendations/listing/delete');
+        return $resultRedirect->setPath('bulbulatory_recommendations/listing/index');
     }
 
     /**

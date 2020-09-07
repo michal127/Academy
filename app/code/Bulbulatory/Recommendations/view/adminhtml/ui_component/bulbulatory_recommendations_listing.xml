@@ -37,6 +37,11 @@
         <paging name="listing_paging" />
     </listingToolbar>
     <columns name="spinner_columns">
+        <actionsColumn name="delete_action" class="Bulbulatory\Recommendations\Ui\Component\Listing\Column\Actions">
+            <settings>
+                <label translate="true">Actions</label>
+            </settings>
+        </actionsColumn>
         <column name="id">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">

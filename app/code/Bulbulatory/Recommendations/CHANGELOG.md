@@ -1,5 +1,9 @@
 # Bulbulatory_Recommendations module changelog
 
+## [1.0.3] - 2020-09-06
+### Added
+- ACL rules for recommendations module.
+
 ## [1.0.2] - 2020-09-04
 ### Added
 - Admin grid for recommendations.

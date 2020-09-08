@@ -47,10 +47,10 @@ class DeleteMass extends AbstractDeleteAction
                 $deletedRows = $this->deleteRecommendationsRowsByIds($selectedRowsIds);
                 $this->messageManager->addSuccessMessage(__('Successfully deleted ' . $deletedRows . ' rows'));
             } else {
-                $this->messageManager->addErrorMessage(__('Invalid request'));
+                $this->messageManager->addErrorMessage(__('Invalid request - missing row IDs'));
             }
         } catch (LocalizedException $e) {
-            $this->messageManager->addErrorMessage(__('Invalid request'));
+            $this->messageManager->addErrorMessage(__('An error occurred while deleting selected rows'));
         }
 
         return $resultRedirect->setPath('bulbulatory_recommendations/listing/index');

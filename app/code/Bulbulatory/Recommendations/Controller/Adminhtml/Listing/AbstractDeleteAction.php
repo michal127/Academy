@@ -3,10 +3,8 @@
 
 namespace Bulbulatory\Recommendations\Controller\Adminhtml\Listing;
 
-use Bulbulatory\Recommendations\Model\ResourceModel\Recommendation;
+use Bulbulatory\Recommendations\Model\RecommendationRepository;
 use Magento\Backend\App\Action;
-use Magento\Framework\App\ResourceConnection;
-use Magento\Framework\DB\Adapter\AdapterInterface;
 
 /**
  * Abstract class for admin listing delete actions
@@ -18,18 +16,18 @@ abstract class AbstractDeleteAction extends Action
     const RECOMMENDATIONS_LISTING_DELETE_ACTION = 'Bulbulatory_Recommendations::recommendations_listing_delete';
 
     /**
-     * @var AdapterInterface
+     * @var RecommendationRepository
      */
-    private $connection;
+    private $recommendationsRepository;
 
     /**
      * AbstractDeleteAction constructor.
      * @param Action\Context $context
-     * @param ResourceConnection $resource
+     * @param RecommendationRepository $recommendationRepository
      */
-    public function __construct(Action\Context $context, ResourceConnection $resource)
+    public function __construct(Action\Context $context, RecommendationRepository $recommendationRepository)
     {
-        $this->connection = $resource->getConnection();
+        $this->recommendationsRepository = $recommendationRepository;
         parent::__construct($context);
     }
 
@@ -39,7 +37,7 @@ abstract class AbstractDeleteAction extends Action
      */
     protected function deleteRecommendationsRowsByIds(array $ids)
     {
-        return $this->connection->delete(Recommendation::MAIN_TABLE, 'id IN (' . implode(',', $ids) . ')');
+        return $this->recommendationsRepository->deleteByIds($ids);
     }
 
     /**

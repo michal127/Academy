@@ -3,9 +3,9 @@
 namespace Bulbulatory\Recommendations\Controller\Adminhtml\Listing;
 
 
+use Bulbulatory\Recommendations\Model\RecommendationRepository;
 use Bulbulatory\Recommendations\Model\ResourceModel\Recommendation\CollectionFactory;
 use Magento\Backend\App\Action;
-use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Ui\Component\MassAction\Filter;
 
@@ -27,15 +27,15 @@ class DeleteMass extends AbstractDeleteAction
     /**
      * DeleteMass constructor.
      * @param Action\Context $context
-     * @param ResourceConnection $resource
+     * @param RecommendationRepository $recommendationRepository
      * @param Filter $filter
      * @param CollectionFactory $collectionFactory
      */
-    public function __construct(Action\Context $context, ResourceConnection $resource, Filter $filter, CollectionFactory $collectionFactory)
+    public function __construct(Action\Context $context, RecommendationRepository $recommendationRepository, Filter $filter, CollectionFactory $collectionFactory)
     {
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
-        parent::__construct($context, $resource);
+        parent::__construct($context, $recommendationRepository);
     }
 
     public function execute()

@@ -2,22 +2,26 @@
 
 namespace Bulbulatory\Recommendations\Controller\Adminhtml\Listing;
 
+
 /**
- * Class Delete
+ * Class DeleteMass
  * @package Bulbulatory\Recommendations\Controller\Adminhtml\Listing
  */
-class Delete extends AbstractDeleteAction
+class DeleteMass extends AbstractDeleteAction
 {
+
     public function execute()
     {
-        $id = (int)$this->_request->getParam('id');
         $resultRedirect = $this->resultRedirectFactory->create();
 
-        if (!empty($id) && $this->deleteRecommendationsRowsByIds([$id]) > 0) {
-            $this->messageManager->addSuccessMessage(__('Recommendation with ID: ' . $id . ' deleted!'));
+        $selectedRowsIds = $this->_request->getParam('selected');
+        if (!empty($selectedRowsIds)) {
+            $deletedRows = $this->deleteRecommendationsRowsByIds($selectedRowsIds);
+            $this->messageManager->addSuccessMessage(__('Successfully deleted ' . $deletedRows . ' rows'));
         } else {
             $this->messageManager->addErrorMessage(__('Invalid request'));
         }
+
         return $resultRedirect->setPath('bulbulatory_recommendations/listing/index');
     }
 }

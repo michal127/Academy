@@ -31,12 +31,41 @@
         </argument>
     </dataSource>
     <listingToolbar name="listing_top">
-        <filters name="listing_filters" />
-        <columnsControls name="columns_controls" />
-        <filterSearch name="fulltext" />
-        <paging name="listing_paging" />
+        <filters name="listing_filters"/>
+        <columnsControls name="columns_controls"/>
+        <filterSearch name="fulltext"/>
+        <paging name="listing_paging"/>
+        <massaction name="listing_massaction">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="selectProvider" xsi:type="string">
+                        bulbulatory_recommendations_listing.bulbulatory_recommendations_listing.spinner_columns.selection_column
+                    </item>
+                    <item name="indexField" xsi:type="string">id</item>
+                </item>
+            </argument>
+            <action name="delete">
+                <settings>
+                    <confirm>
+                        <title translate="true">Confirmation</title>
+                        <message translate="true">Are you sure you want to delete selected items?</message>
+                    </confirm>
+                    <url path="bulbulatory_recommendations/listing/deletemass"/>
+                    <type>delete</type>
+                    <label translate="true">Delete selected rows</label>
+                </settings>
+            </action>
+        </massaction>
     </listingToolbar>
     <columns name="spinner_columns">
+        <selectionsColumn name="selection_column">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="indexField" xsi:type="string">id</item>
+                    <item name="label" xsi:type="string" translate="true">Delete selected rows</item>
+                </item>
+            </argument>
+        </selectionsColumn>
         <actionsColumn name="delete_action" class="Bulbulatory\Recommendations\Ui\Component\Listing\Column\Actions">
             <settings>
                 <label translate="true">Actions</label>

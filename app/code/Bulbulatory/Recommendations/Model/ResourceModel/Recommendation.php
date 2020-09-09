@@ -10,8 +10,10 @@ use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
  */
 class Recommendation extends AbstractDb
 {
+    public const MAIN_TABLE = 'bulbulatory_recommendations';
+
     protected function _construct()
     {
-        $this->_init('bulbulatory_recommendations', 'id');
+        $this->_init(self::MAIN_TABLE, 'id');
     }
 }

@@ -5,6 +5,7 @@
             <resource id="Magento_Backend::admin">
                 <resource id="Bulbulatory_Recommendations::recommendations_module" title="Customers recommendations" sortOrder="51">
                     <resource id="Bulbulatory_Recommendations::recommendations_listing_grid" title="Recommendations list" sortOrder="10"/>
+                    <resource id="Bulbulatory_Recommendations::recommendations_listing_delete" title="Deleting recommendations" sortOrder="20"/>
                 </resource>
                 <resource id="Magento_Backend::stores">
                     <resource id="Magento_Backend::stores_settings">

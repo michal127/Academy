@@ -4,37 +4,29 @@
 namespace Bulbulatory\Recommendations\Controller\Recommendations;
 
 
-use Magento\Framework\App\Action;
-use Magento\Framework\App\Action\Context;
-use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\App\Action\HttpPostActionInterface as HttpPostActionInterface;
 use Magento\Framework\Controller\ResultInterface;
-use Magento\Framework\View\Result\Page;
-use Magento\Framework\View\Result\PageFactory;
 
-class Add extends Action\Action
+/**
+ * Class Add
+ * @package Bulbulatory\Recommendations\Controller\Recommendations
+ */
+class Add extends LoggedInAction implements HttpPostActionInterface
 {
-    /**
-     * @var PageFactory
-     */
-    private $pageFactory;
 
     /**
-     * Add constructor.
-     * @param Context $context
-     * @param PageFactory $pageFactory
+     * @return ResultInterface
      */
-    public function __construct(Context $context, PageFactory $pageFactory)
+    protected function _execute(): ResultInterface
     {
-        $this->pageFactory = $pageFactory;
-        parent::__construct($context);
-    }
 
-    /**
-     * @return ResponseInterface|ResultInterface|Page
-     */
-    public function execute()
-    {
-        //Todo prepare saving recommendation and sending mail, prepare layout
-        return $this->pageFactory->create();
+        $email = $this->getRequest()->getParam('recoEmail');
+
+        if (!empty($email)) {
+            /* TODO handle request*/
+            $this->messageManager->addSuccessMessage('Recommendation send successfully!');
+        }
+        $resultRedirect = $this->resultRedirectFactory->create();
+        return $resultRedirect->setPath('customer/recommendations/index');
     }
 }

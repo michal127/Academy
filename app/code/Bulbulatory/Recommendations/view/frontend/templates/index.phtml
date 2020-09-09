@@ -1,8 +1,8 @@
 <h2>Recommendation</h2>
 <div class="col-m-6">
     <div class="row">
-        <form action="/customer/recommendation/add">
-            <input type="email">
+        <form action="/customer/recommendations/add" method="post">
+            <input type="email" name="recoEmail" class="input-text required-entry">
             <input type="submit">
         </form>
     </div>
@@ -10,12 +10,12 @@
 <script type="text/javascript">
     require(["jquery", 'Magento_Ui/js/modal/alert'], function($, alert){
 
-        alert({
+        /*alert({
             title: $.mage.__('Some title'),
             content: $.mage.__('Some content'),
             actions: {
                 always: function(){}
             }
-        });
+        });*/
     });
 </script>

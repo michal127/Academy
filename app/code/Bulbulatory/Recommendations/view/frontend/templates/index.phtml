@@ -1,2 +1,21 @@
-<h2>STUB</h2>
-<!--TODO prepare email form an layout-->
+<h2>Recommendation</h2>
+<div class="col-m-6">
+    <div class="row">
+        <form action="/customer/recommendation/add">
+            <input type="email">
+            <input type="submit">
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    require(["jquery", 'Magento_Ui/js/modal/alert'], function($, alert){
+
+        alert({
+            title: $.mage.__('Some title'),
+            content: $.mage.__('Some content'),
+            actions: {
+                always: function(){}
+            }
+        });
+    });
+</script>

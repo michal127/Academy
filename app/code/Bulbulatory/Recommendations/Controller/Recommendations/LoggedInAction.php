@@ -17,7 +17,7 @@ use Magento\Framework\Controller\ResultInterface;
  */
 abstract class LoggedInAction extends Action\Action
 {
-    private $customerSession;
+    protected $customerSession;
 
     /**
      * LoggedInAction constructor.

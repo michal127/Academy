@@ -1,0 +1,27 @@
+<!--@subject Test Recommendation  @-->
+<!--@vars {
+"var this.getUrl($store, 'admin')":"Warehouse Account URL",
+"var customer.email":"Customer Email",
+"var customer.name":"Customer Name"
+} @-->
+
+{{template config_path="design/email/header_template"}}
+<table>
+    <tr class="email-intro">
+        <td>
+            <p class="greeting">{{trans "Hello, %email" email=$recommendedEmail}}</p>
+            <p>
+                {{trans "Your friend %customer_name just recommended you our shop!" customer_name=$senderName}}
+                {{trans 'You can enter our shop by clicking button below'}}
+            </p>
+        </td>
+    </tr>
+    <tr class="email-summary">
+        <td>
+            <a href="{{trans "%shop_url" shop_url=$confirmationUrl}}">{{trans 'Enter bulbulatory'}}</a>
+        </td
+    </tr>
+
+</table>
+
+{{template config_path="design/email/footer_template"}} <!--footer of template-->

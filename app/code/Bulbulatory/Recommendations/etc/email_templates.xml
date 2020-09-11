@@ -2,5 +2,5 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
     <template id="recommendations_general_recommendation_email" label="Shop recommendation email" file="recommendation_email.html"
-              type="html" module="Bulbulatory_Recommendations" area="adminhtml"/>
+              type="html" module="Bulbulatory_Recommendations" area="frontend"/>
 </config>

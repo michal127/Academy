@@ -86,7 +86,7 @@ class RecommendationRepository implements RecommendationRepositoryInterface
             $recommendation->setData([
                 'email' => $recommendedEmail,
                 'customer_id' => $customer->getId(),
-                'hash' =>  $hash
+                'hash' => $hash
             ]);
             $this->recommendationResource->save($recommendation);
             return true;
@@ -94,5 +94,19 @@ class RecommendationRepository implements RecommendationRepositoryInterface
             return false;
         }
 
+    }
+
+    /**
+     * Confirming recommendation by given hash
+     * @param string $hash
+     * @return int
+     */
+    public function confirmRecommendation(string $hash)
+    {
+       return $this->connection->update(
+           RecommendationResource::MAIN_TABLE,
+           ['status' => '1', 'confirmed_at' => date('Y-m-d H:i:s')],
+           ['`hash` = ?' => $hash, '`status` <> ?' => 1]
+       );
     }
 }

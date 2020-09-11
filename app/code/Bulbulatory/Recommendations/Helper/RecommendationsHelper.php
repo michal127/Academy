@@ -16,10 +16,10 @@ use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
 /**
- * Class Email
+ * Class RecommendationsHelper
  * @package Bulbulatory\Recommendations\Helper
  */
-class Email extends AbstractHelper
+class RecommendationsHelper extends AbstractHelper
 {
     /**
      * @var ScopeConfigInterface
@@ -75,7 +75,7 @@ class Email extends AbstractHelper
      * @param int $storeId
      * @return mixed
      */
-    protected function getConfigValue(string $path, int $storeId)
+    public function getConfigValue(string $path, int $storeId)
     {
         return $this->scopeConfig->getValue(
             $path,
@@ -112,7 +112,7 @@ class Email extends AbstractHelper
      * @param array $emailTemplateVariables
      * @param array $senderInfo
      * @param array $receiverInfo
-     * @return Email
+     * @return RecommendationsHelper
      * @throws NoSuchEntityException
      */
     public function generateTemplate(array $emailTemplateVariables, array $senderInfo, array $receiverInfo)

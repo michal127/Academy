@@ -4,7 +4,7 @@
 namespace Bulbulatory\Recommendations\Controller\Recommendations;
 
 
-use Bulbulatory\Recommendations\Helper\Email;
+use Bulbulatory\Recommendations\Helper\RecommendationsHelper;
 use Bulbulatory\Recommendations\Model\RecommendationRepository;
 use Exception;
 use Magento\Customer\Model\Session;
@@ -28,17 +28,17 @@ class Add extends LoggedInAction implements HttpPostActionInterface
      */
     private $recommendationsRepository;
     /**
-     * @var Email
+     * @var RecommendationsHelper
      */
-    private $emailHelper;
+    private $recommendationsHelper;
     /**
      * @var UrlInterface
      */
     private $urlBuilder;
 
-    public function __construct(Context $context, Session $customerSession, RecommendationRepository $recommendationRepository, Email $emailHelper, UrlInterface $urlBuilder)
+    public function __construct(Context $context, Session $customerSession, RecommendationRepository $recommendationRepository, RecommendationsHelper $recommendationsHelper, UrlInterface $urlBuilder)
     {
-        $this->emailHelper = $emailHelper;
+        $this->recommendationsHelper = $recommendationsHelper;
         $this->urlBuilder = $urlBuilder;
         $this->recommendationsRepository = $recommendationRepository;
         parent::__construct($context, $customerSession);
@@ -75,11 +75,11 @@ class Add extends LoggedInAction implements HttpPostActionInterface
 
                     $templateVars = [
                         'recommendedEmail' => $recommendedEmail,
-                        'confirmationUrl' => $this->urlBuilder->getUrl(Confirm::ROUTE, ['hash' => base64_encode($hash)]), //TODO add valid link
+                        'confirmationUrl' => $this->urlBuilder->getUrl(Confirm::ROUTE, ['hash' => base64_encode($hash)]),
                         'senderName' => $customer->getName(),
                     ];
 
-                    $this->emailHelper->sendRecommendationEmail(self::XML_PATH_EMAIL_TEMPLATE_FIELD, $templateVars, $senderInfo, $receiverInfo);
+                    $this->recommendationsHelper->sendRecommendationEmail(self::XML_PATH_EMAIL_TEMPLATE_FIELD, $templateVars, $senderInfo, $receiverInfo);
                     $this->messageManager->addSuccessMessage(__('Recommendation send successfully!'));
                 } catch (Exception $e) {
                     $this->messageManager->addErrorMessage(__('An error occurred while sending recommendation. please try again.' . $e->getMessage()));

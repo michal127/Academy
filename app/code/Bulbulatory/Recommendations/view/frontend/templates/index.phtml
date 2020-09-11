@@ -1,21 +1,18 @@
-<h2>Recommendation</h2>
-<div class="col-m-6">
-    <div class="row">
-        <form action="/customer/recommendations/add" method="post">
-            <input type="email" name="recoEmail" class="input-text required-entry">
-            <input type="submit">
-        </form>
-    </div>
-</div>
-<script type="text/javascript">
-    require(["jquery", 'Magento_Ui/js/modal/alert'], function($, alert){
+<?php
+/**
+ * @var $this \Bulbulatory\Recommendations\Block\Index
+ */
+?>
+<h2><?= __('Recommendation') ?></h2>
 
-        /*alert({
-            title: $.mage.__('Some title'),
-            content: $.mage.__('Some content'),
-            actions: {
-                always: function(){}
-            }
-        });*/
-    });
-</script>
+<p><span><?= __('You can send recommendation of our shop to your friends!') ?></span></p>
+<p><span><?= __('In reward you will get extra discount for each friend that will enter our shop by your recommendation') ?></span></p>
+
+<form action="<?= $this->getFormActionUrl() ?>" method="post">
+    <label for="email"><?= __('Email address') ?></label>
+    <input id="email" type="email" name="<?= $this->getEmailInputName() ?>">
+    <input type="submit" value="<?= __('Send recommendation') ?>">
+</form>
+
+
+

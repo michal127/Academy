@@ -13,6 +13,8 @@ use Magento\Framework\App\Action\Context;
  */
 class Confirm extends Action\Action
 {
+    const ROUTE = 'customer/recommendations/confirm';
+
     /**
      * @var RecommendationRepository
      */
@@ -24,7 +26,6 @@ class Confirm extends Action\Action
         parent::__construct($context);
     }
 
-    const ROUTE = 'customer/recommendations/confirm';
 
     public function execute()
     {

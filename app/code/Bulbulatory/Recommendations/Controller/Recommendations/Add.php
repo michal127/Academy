@@ -21,6 +21,7 @@ use Ramsey\Uuid\Uuid;
 class Add extends LoggedInAction implements HttpPostActionInterface
 {
     const ROUTE = 'customer/recommendations/add';
+    const POST_PARAM_EMAIL = 'recommendedEmail';
     const XML_PATH_EMAIL_TEMPLATE_FIELD = 'recommendations/general/recommendation_email';
 
     /**
@@ -51,7 +52,7 @@ class Add extends LoggedInAction implements HttpPostActionInterface
     {
         $customer = $this->customerSession->getCustomer();
 
-        $recommendedEmail = $this->getRequest()->getParam('recoEmail');
+        $recommendedEmail = $this->getRequest()->getParam(self::POST_PARAM_EMAIL);
 
         if (empty($recommendedEmail)) {
             $this->messageManager->addErrorMessage(__('Email field cannot be empty!'));

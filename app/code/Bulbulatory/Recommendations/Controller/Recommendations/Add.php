@@ -30,20 +30,21 @@ class Add extends LoggedInAction implements HttpPostActionInterface
      */
     private $recommendationsRepository;
     /**
-     * @var RecommendationsHelper
-     */
-    private $recommendationsHelper;
-    /**
      * @var UrlInterface
      */
     private $urlBuilder;
 
-    public function __construct(Context $context, Session $customerSession, RecommendationRepository $recommendationRepository, RecommendationsHelper $recommendationsHelper, UrlInterface $urlBuilder)
+    public function __construct(
+        Context $context,
+        RecommendationsHelper $recommendationsHelper,
+        Session $customerSession,
+        RecommendationRepository $recommendationRepository,
+        UrlInterface $urlBuilder
+    )
     {
-        $this->recommendationsHelper = $recommendationsHelper;
         $this->urlBuilder = $urlBuilder;
         $this->recommendationsRepository = $recommendationRepository;
-        parent::__construct($context, $customerSession);
+        parent::__construct($context, $recommendationsHelper, $customerSession);
     }
 
     /**
@@ -51,23 +52,23 @@ class Add extends LoggedInAction implements HttpPostActionInterface
      */
     protected function _execute(): ResultInterface
     {
-        $customer = $this->customerSession->getCustomer();
+        if ($this->isRecommendationModuleEnabled()) {
+            $customer = $this->customerSession->getCustomer();
+            $recommendedEmail = $this->getRequest()->getParam(self::POST_PARAM_EMAIL);
 
-        $recommendedEmail = $this->getRequest()->getParam(self::POST_PARAM_EMAIL);
-
-        if (empty($recommendedEmail)) {
-            $this->messageManager->addErrorMessage(__('Email field cannot be empty!'));
-        } elseif ($recommendedEmail === $customer->getEmail()) {
-            $this->messageManager->addErrorMessage(__('Recommended email cannot be same as yours!'));
-        } elseif ($this->recommendationsRepository->isRecommendationExist($customer, $recommendedEmail)) {
-            $this->messageManager->addErrorMessage(__('You already created recommendation for given email address!'));
-        } elseif (!$this->createRecommendation($customer, $recommendedEmail)) {
-            $this->messageManager->addErrorMessage(__('An error occurred while sending recommendation. please try again.'));
-        } else {
-            $this->messageManager->addSuccessMessage(__('Recommendation send successfully!'));
+            if (empty($recommendedEmail)) {
+                $this->messageManager->addErrorMessage(__('Email field cannot be empty!'));
+            } elseif ($recommendedEmail === $customer->getEmail()) {
+                $this->messageManager->addErrorMessage(__('Recommended email cannot be same as yours!'));
+            } elseif ($this->recommendationsRepository->isRecommendationExist($customer, $recommendedEmail)) {
+                $this->messageManager->addErrorMessage(__('You already created recommendation for given email address!'));
+            } elseif (!$this->createRecommendation($customer, $recommendedEmail)) {
+                $this->messageManager->addErrorMessage(__('An error occurred while sending recommendation. please try again.'));
+            } else {
+                $this->messageManager->addSuccessMessage(__('Recommendation send successfully!'));
+            }
         }
-        $resultRedirect = $this->resultRedirectFactory->create();
-        return $resultRedirect->setPath(Index::ROUTE);
+        return $this->resultRedirectFactory->create()->setPath(Index::ROUTE);
     }
 
     /**

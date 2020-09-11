@@ -4,6 +4,7 @@
 namespace Bulbulatory\Recommendations\Controller\Recommendations;
 
 
+use Bulbulatory\Recommendations\Helper\RecommendationsHelper;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\ResultInterface;
@@ -24,13 +25,19 @@ class Index extends LoggedInAction
     /**
      * Add constructor.
      * @param Context $context
-     * @param PageFactory $pageFactory
+     * @param RecommendationsHelper $recommendationsHelper
      * @param Session $customerSession
+     * @param PageFactory $pageFactory
      */
-    public function __construct(Context $context, Session $customerSession, PageFactory $pageFactory)
+    public function __construct(
+        Context $context,
+        RecommendationsHelper $recommendationsHelper,
+        Session $customerSession,
+        PageFactory $pageFactory
+    )
     {
         $this->pageFactory = $pageFactory;
-        parent::__construct($context, $customerSession);
+        parent::__construct($context, $recommendationsHelper, $customerSession);
     }
 
     /**
@@ -38,6 +45,9 @@ class Index extends LoggedInAction
      */
     protected function _execute(): ResultInterface
     {
-        return $this->pageFactory->create();
+        if ($this->isRecommendationModuleEnabled()) {
+            return $this->pageFactory->create();
+        }
+        return $this->resultRedirectFactory->create()->setPath('/');
     }
 }

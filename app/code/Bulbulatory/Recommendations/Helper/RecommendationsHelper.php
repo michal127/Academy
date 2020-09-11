@@ -149,4 +149,16 @@ class RecommendationsHelper extends AbstractHelper
         $transport->sendMessage();
         $this->inlineTranslation->resume();
     }
+
+    /**
+     * @return bool enable configuration value of Bulbulatory_Recommendations module
+     */
+    public function isRecommendationsModuleEnabled()
+    {
+        try {
+            return (bool)$this->getConfigValue('recommendations/general/enable', $this->getStore()->getStoreId());
+        } catch (NoSuchEntityException $e) {
+            return false;
+        }
+    }
 }

@@ -3,8 +3,8 @@
 
 namespace Bulbulatory\Recommendations\Controller\Recommendations;
 
+use Bulbulatory\Recommendations\Helper\RecommendationsHelper;
 use Magento\Customer\Model\Session;
-use Magento\Framework\App\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\Redirect;
@@ -15,19 +15,20 @@ use Magento\Framework\Controller\ResultInterface;
  * Abstract Action class for logged in customers only
  * @package Bulbulatory\Recommendations\Controller\Recommendations
  */
-abstract class LoggedInAction extends Action\Action
+abstract class LoggedInAction extends AbstractRecommendationAction
 {
     protected $customerSession;
 
     /**
      * LoggedInAction constructor.
      * @param Context $context
+     * @param RecommendationsHelper $recommendationsHelper
      * @param Session $customerSession
      */
-    public function __construct(Context $context, Session $customerSession)
+    public function __construct(Context $context, RecommendationsHelper $recommendationsHelper, Session $customerSession)
     {
         $this->customerSession = $customerSession;
-        parent::__construct($context);
+        parent::__construct($context, $recommendationsHelper);
     }
 
     /**
@@ -36,9 +37,8 @@ abstract class LoggedInAction extends Action\Action
      */
     public function execute()
     {
-        $resultRedirect = $this->resultRedirectFactory->create();
         if (!$this->customerSession->isLoggedIn()) {
-            return $resultRedirect->setPath('/');
+            return $this->resultRedirectFactory->create()->setPath('/');
         }
         return $this->_execute();
     }

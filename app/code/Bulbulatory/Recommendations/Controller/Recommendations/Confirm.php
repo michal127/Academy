@@ -3,15 +3,15 @@
 
 namespace Bulbulatory\Recommendations\Controller\Recommendations;
 
+use Bulbulatory\Recommendations\Helper\RecommendationsHelper;
 use Bulbulatory\Recommendations\Model\RecommendationRepository;
-use Magento\Framework\App\Action;
 use Magento\Framework\App\Action\Context;
 
 /**
  * Class Confirm
  * @package Bulbulatory\Recommendations\Controller\Recommendations
  */
-class Confirm extends Action\Action
+class Confirm extends AbstractRecommendationAction
 {
     const ROUTE = 'customer/recommendations/confirm';
 
@@ -20,22 +20,31 @@ class Confirm extends Action\Action
      */
     private $recommendationRepository;
 
-    public function __construct(Context $context, RecommendationRepository $recommendationRepository)
+    /**
+     * Confirm constructor.
+     * @param Context $context
+     * @param RecommendationsHelper $recommendationsHelper
+     * @param RecommendationRepository $recommendationRepository
+     */
+    public function __construct(
+        Context $context,
+        RecommendationsHelper $recommendationsHelper,
+        RecommendationRepository $recommendationRepository
+    )
     {
         $this->recommendationRepository = $recommendationRepository;
-        parent::__construct($context);
+        parent::__construct($context, $recommendationsHelper);
     }
-
 
     public function execute()
     {
-        $hash = $this->getRequest()->getParam('hash');
-        if (!empty($hash) && $this->recommendationRepository->confirmRecommendation(base64_decode($hash))) {
-            $this->messageManager->addSuccessMessage(__('Thank you for visiting our shop!'));
+        if ($this->isRecommendationModuleEnabled()) {
+            $hash = $this->getRequest()->getParam('hash');
+            if (!empty($hash) && $this->recommendationRepository->confirmRecommendation(base64_decode($hash))) {
+                $this->messageManager->addSuccessMessage(__('Thank you for visiting our shop!'));
+            }
         }
 
-        $this->resultRedirectFactory->create();
-        $resultRedirect = $this->resultRedirectFactory->create();
-        return $resultRedirect->setPath('/');
+        return $this->resultRedirectFactory->create()->setPath('/');
     }
 }

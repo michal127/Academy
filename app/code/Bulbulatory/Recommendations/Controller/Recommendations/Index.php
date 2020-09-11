@@ -15,6 +15,7 @@ use Magento\Framework\View\Result\PageFactory;
  */
 class Index extends LoggedInAction
 {
+    const ROUTE = 'customer/recommendations/index';
     /**
      * @var PageFactory
      */

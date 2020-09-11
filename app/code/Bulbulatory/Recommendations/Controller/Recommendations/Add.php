@@ -20,6 +20,7 @@ use Ramsey\Uuid\Uuid;
  */
 class Add extends LoggedInAction implements HttpPostActionInterface
 {
+    const ROUTE = 'customer/recommendations/add';
     const XML_PATH_EMAIL_TEMPLATE_FIELD = 'recommendations/general/recommendation_email';
 
     /**
@@ -74,20 +75,20 @@ class Add extends LoggedInAction implements HttpPostActionInterface
 
                     $templateVars = [
                         'recommendedEmail' => $recommendedEmail,
-                        'confirmationUrl' => $this->urlBuilder->getUrl('recommendations/action/confirm', ['hash' => base64_encode($hash)]), //TODO add valid link
+                        'confirmationUrl' => $this->urlBuilder->getUrl(Confirm::ROUTE, ['hash' => base64_encode($hash)]), //TODO add valid link
                         'senderName' => $customer->getName(),
                     ];
 
-                    $this->emailHelper->sendRecommendationEmail(self::XML_PATH_EMAIL_TEMPLATE_FIELD,$templateVars, $senderInfo, $receiverInfo);
+                    $this->emailHelper->sendRecommendationEmail(self::XML_PATH_EMAIL_TEMPLATE_FIELD, $templateVars, $senderInfo, $receiverInfo);
                     $this->messageManager->addSuccessMessage(__('Recommendation send successfully!'));
                 } catch (Exception $e) {
-                    $this->messageManager->addErrorMessage(__('An error occurred while sending recommendation. please try again.'));
+                    $this->messageManager->addErrorMessage(__('An error occurred while sending recommendation. please try again.' . $e->getMessage()));
                 }
             } else {
                 $this->messageManager->addErrorMessage(__('An error occurred while sending recommendation. please try again.'));
             }
         }
         $resultRedirect = $this->resultRedirectFactory->create();
-        return $resultRedirect->setPath('customer/recommendations/index');
+        return $resultRedirect->setPath(Index::ROUTE);
     }
 }

@@ -10,7 +10,7 @@
 
 <form action="<?= $this->getFormActionUrl() ?>" method="post">
     <label for="email"><?= __('Email address') ?></label>
-    <input id="email" type="email" name="<?= $this->getEmailInputName() ?>">
+    <input id="email" type="email" name="<?= $this->getEmailInputName() ?>" style="max-width: 300px">
     <input type="submit" value="<?= __('Send recommendation') ?>">
 </form>
 

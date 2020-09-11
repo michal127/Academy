@@ -1,9 +1,4 @@
-<!--@subject Test Recommendation  @-->
-<!--@vars {
-"var this.getUrl($store, 'admin')":"Warehouse Account URL",
-"var customer.email":"Customer Email",
-"var customer.name":"Customer Name"
-} @-->
+<!--@subject Your friend just recommended you our shop  @-->
 
 {{template config_path="design/email/header_template"}}
 <table>
@@ -11,8 +6,8 @@
         <td>
             <p class="greeting">{{trans "Hello, %email" email=$recommendedEmail}}</p>
             <p>
-                {{trans "Your friend %customer_name just recommended you our shop!" customer_name=$senderName}}
-                {{trans 'You can enter our shop by clicking button below'}}
+                {{trans "Your friend %customer_name just recommended you our bulbulatory shop!" customer_name=$senderName}}
+                {{trans 'You can enter our shop by clicking link below'}}
             </p>
         </td>
     </tr>
@@ -24,4 +19,4 @@
 
 </table>
 
-{{template config_path="design/email/footer_template"}} <!--footer of template-->
+{{template config_path="design/email/footer_template"}}

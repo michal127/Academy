@@ -29,7 +29,7 @@ class Confirm extends Action\Action
     public function execute()
     {
         $hash = $this->getRequest()->getParam('hash');
-        if (!empty($hash) && $this->recommendationRepository->confirmRecommendation(base64_decode($hash)) > 0) {
+        if (!empty($hash) && $this->recommendationRepository->confirmRecommendation(base64_decode($hash))) {
             $this->messageManager->addSuccessMessage(__('Thank you for visiting our shop!'));
         }
 

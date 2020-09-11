@@ -98,15 +98,17 @@ class RecommendationRepository implements RecommendationRepositoryInterface
 
     /**
      * Confirming recommendation by given hash
+     * Confirm only once if recommendation is unconfirmed
      * @param string $hash
-     * @return int
+     * @return bool true - if confirmation was saved
      */
     public function confirmRecommendation(string $hash)
     {
-       return $this->connection->update(
-           RecommendationResource::MAIN_TABLE,
-           ['status' => '1', 'confirmed_at' => date('Y-m-d H:i:s')],
-           ['`hash` = ?' => $hash, '`status` <> ?' => 1]
-       );
+        $updatedRows = $this->connection->update(
+            RecommendationResource::MAIN_TABLE,
+            ['status' => '1', 'confirmed_at' => date('Y-m-d H:i:s')],
+            ['`hash` = ?' => $hash, '`status` <> ?' => 1]
+        );
+        return $updatedRows > 0;
     }
 }

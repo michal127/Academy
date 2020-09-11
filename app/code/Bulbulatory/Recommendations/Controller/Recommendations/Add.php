@@ -7,6 +7,7 @@ namespace Bulbulatory\Recommendations\Controller\Recommendations;
 use Bulbulatory\Recommendations\Helper\RecommendationsHelper;
 use Bulbulatory\Recommendations\Model\RecommendationRepository;
 use Exception;
+use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpPostActionInterface as HttpPostActionInterface;
@@ -60,36 +61,53 @@ class Add extends LoggedInAction implements HttpPostActionInterface
             $this->messageManager->addErrorMessage(__('Recommended email cannot be same as yours!'));
         } elseif ($this->recommendationsRepository->isRecommendationExist($customer, $recommendedEmail)) {
             $this->messageManager->addErrorMessage(__('You already created recommendation for given email address!'));
+        } elseif (!$this->createRecommendation($customer, $recommendedEmail)) {
+            $this->messageManager->addErrorMessage(__('An error occurred while sending recommendation. please try again.'));
         } else {
-            $hash = Uuid::uuid4();
-            if ($this->recommendationsRepository->createRecommendation($customer, $recommendedEmail, $hash)) {
-                try {
-                    $receiverInfo = [
-                        'name' => $recommendedEmail,
-                        'email' => $recommendedEmail
-                    ];
-
-                    $senderInfo = [
-                        'name' => 'Bulbulatory',
-                        'email' => 'bulbulatory@magento.pl',
-                    ];
-
-                    $templateVars = [
-                        'recommendedEmail' => $recommendedEmail,
-                        'confirmationUrl' => $this->urlBuilder->getUrl(Confirm::ROUTE, ['hash' => base64_encode($hash)]),
-                        'senderName' => $customer->getName(),
-                    ];
-
-                    $this->recommendationsHelper->sendRecommendationEmail(self::XML_PATH_EMAIL_TEMPLATE_FIELD, $templateVars, $senderInfo, $receiverInfo);
-                    $this->messageManager->addSuccessMessage(__('Recommendation send successfully!'));
-                } catch (Exception $e) {
-                    $this->messageManager->addErrorMessage(__('An error occurred while sending recommendation. please try again.' . $e->getMessage()));
-                }
-            } else {
-                $this->messageManager->addErrorMessage(__('An error occurred while sending recommendation. please try again.'));
-            }
+            $this->messageManager->addSuccessMessage(__('Recommendation send successfully!'));
         }
         $resultRedirect = $this->resultRedirectFactory->create();
         return $resultRedirect->setPath(Index::ROUTE);
+    }
+
+    /**
+     * Creating recommendation entry in database and sending recommendation email
+     * @param Customer $customer
+     * @param string $recommendedEmail
+     * @return bool true if recommendation was saved and send successfully
+     */
+    private function createRecommendation(Customer $customer, string $recommendedEmail)
+    {
+        try {
+            $hash = Uuid::uuid4();
+        } catch (Exception $e) {
+            return false;
+        }
+        if ($this->recommendationsRepository->createRecommendation($customer, $recommendedEmail, $hash)) {
+            try {
+                $receiverInfo = [
+                    'name' => $recommendedEmail,
+                    'email' => $recommendedEmail
+                ];
+
+                $senderInfo = [
+                    'name' => 'Bulbulatory',
+                    'email' => 'bulbulatory@magento.pl',
+                ];
+
+                $templateVars = [
+                    'recommendedEmail' => $recommendedEmail,
+                    'confirmationUrl' => $this->urlBuilder->getUrl(Confirm::ROUTE, ['hash' => base64_encode($hash)]),
+                    'senderName' => $customer->getName(),
+                ];
+
+                $this->recommendationsHelper->sendRecommendationEmail(self::XML_PATH_EMAIL_TEMPLATE_FIELD, $templateVars, $senderInfo, $receiverInfo);
+                return true;
+            } catch (Exception $e) {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 }

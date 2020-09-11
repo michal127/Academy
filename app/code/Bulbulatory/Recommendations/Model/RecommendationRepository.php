@@ -98,7 +98,7 @@ class RecommendationRepository implements RecommendationRepositoryInterface
 
     /**
      * Confirming recommendation by given hash
-     * Confirm only once if recommendation is unconfirmed
+     * Confirm only once if recommendation is still unconfirmed
      * @param string $hash
      * @return bool true - if confirmation was saved
      */

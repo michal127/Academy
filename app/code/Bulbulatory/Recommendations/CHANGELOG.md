@@ -1,5 +1,12 @@
 # Bulbulatory_Recommendations module changelog
 
+## [1.0.4] - 2020-09-09
+### Added
+- customer/recommendations/index action (recommendation form)
+- customer/recommendations/add action (saving/sending recommendation)
+- customer/recommendations/confirm action (confirming recommendation from email links)
+- email template for recommendation
+
 ## [1.0.3] - 2020-09-06
 ### Added
 - ACL rules for recommendations module.

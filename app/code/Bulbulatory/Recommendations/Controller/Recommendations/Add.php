@@ -13,7 +13,7 @@ use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpPostActionInterface as HttpPostActionInterface;
 use Magento\Framework\Controller\ResultInterface;
-use Magento\Framework\UrlInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class Add
@@ -33,6 +33,10 @@ class Add extends LoggedInAction implements HttpPostActionInterface
      * @var EmailHelper
      */
     private $emailHelper;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * Add constructor.
@@ -41,15 +45,18 @@ class Add extends LoggedInAction implements HttpPostActionInterface
      * @param Session $customerSession
      * @param EmailHelper $emailHelper
      * @param RecommendationRepository $recommendationRepository
+     * @param LoggerInterface $logger
      */
     public function __construct(
         Context $context,
         ConfigHelper $configHelper,
         Session $customerSession,
         EmailHelper $emailHelper,
-        RecommendationRepository $recommendationRepository
+        RecommendationRepository $recommendationRepository,
+        LoggerInterface $logger
     )
     {
+        $this->logger = $logger;
         $this->emailHelper = $emailHelper;
         $this->recommendationsRepository = $recommendationRepository;
         parent::__construct($context, $configHelper, $customerSession);
@@ -95,6 +102,7 @@ class Add extends LoggedInAction implements HttpPostActionInterface
                 $this->emailHelper->sendRecommendationEmail(self::XML_PATH_EMAIL_TEMPLATE_FIELD, $recommendedEmail, $customer->getName(), $hash);
                 return true;
             } catch (Exception $e) {
+                $this->logger->error($e->getMessage());
                 return false;
             }
         } else {

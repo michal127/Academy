@@ -10,6 +10,7 @@ use Exception;
 use Magento\Customer\Model\Customer;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Adapter\AdapterInterface;
+use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 
 /**
@@ -30,6 +31,10 @@ class RecommendationRepository implements RecommendationRepositoryInterface
      * @var RecommendationResource
      */
     private $recommendationResource;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * RecommendationRepository constructor.
@@ -37,8 +42,14 @@ class RecommendationRepository implements RecommendationRepositoryInterface
      * @param RecommendationFactory $recommendationFactory
      * @param RecommendationResource $recommendationResource
      */
-    public function __construct(ResourceConnection $resourceConnection, RecommendationFactory $recommendationFactory, RecommendationResource $recommendationResource)
+    public function __construct(
+        ResourceConnection $resourceConnection,
+        RecommendationFactory $recommendationFactory,
+        RecommendationResource $recommendationResource,
+        LoggerInterface $logger
+    )
     {
+        $this->logger = $logger;
         $this->recommendationFactory = $recommendationFactory;
         $this->recommendationResource = $recommendationResource;
         $this->connection = $resourceConnection->getConnection();
@@ -93,6 +104,7 @@ class RecommendationRepository implements RecommendationRepositoryInterface
             $this->recommendationResource->save($recommendation);
             return $hash;
         } catch (Exception $e) {
+            $this->logger->error($e->getMessage());
             return '';
         }
 

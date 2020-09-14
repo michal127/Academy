@@ -2,6 +2,7 @@
 
 namespace Bulbulatory\Recommendations\Helper;
 
+use Bulbulatory\Recommendations\Controller\Recommendations\Confirm;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
@@ -10,6 +11,7 @@ use Magento\Framework\Exception\MailException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\Translate\Inline\StateInterface;
+use Magento\Framework\UrlInterface;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
@@ -40,21 +42,28 @@ class EmailHelper extends AbstractHelper
      * @var string
      */
     protected $temp_id;
+    /**
+     * @var UrlInterface
+     */
+    private $urlBuilder;
 
     /**
      * @param Context $context
      * @param StoreManagerInterface $storeManager
      * @param StateInterface $inlineTranslation
      * @param TransportBuilder $transportBuilder
+     * @param UrlInterface $urlBuilder
      */
     public function __construct(
         Context $context,
         StoreManagerInterface $storeManager,
         StateInterface $inlineTranslation,
-        TransportBuilder $transportBuilder
+        TransportBuilder $transportBuilder,
+        UrlInterface $urlBuilder
     )
     {
         parent::__construct($context);
+        $this->urlBuilder = $urlBuilder;
         $this->_storeManager = $storeManager;
         $this->inlineTranslation = $inlineTranslation;
         $this->_transportBuilder = $transportBuilder;
@@ -103,18 +112,34 @@ class EmailHelper extends AbstractHelper
     /**
      * Sending recommendation email
      * @param string $emailTemplateID
-     * @param array $emailTemplateVariables
-     * @param array $senderInfo
-     * @param array $receiverInfo
+     * @param string $recommendedEmail
+     * @param string $senderName
+     * @param string $hash
      * @throws LocalizedException
      * @throws MailException
      * @throws NoSuchEntityException
      */
-    public function sendRecommendationEmail(string $emailTemplateID, array $emailTemplateVariables, array $senderInfo, array $receiverInfo)
+    public function sendRecommendationEmail(string $emailTemplateID, string $recommendedEmail, string $senderName, string $hash)
     {
+        $receiverInfo = [
+            'name' => $recommendedEmail,
+            'email' => $recommendedEmail
+        ];
+
+        $senderInfo = [
+            'name' => 'Bulbulatory',
+            'email' => 'bulbulatory@magento.pl',
+        ];
+
+        $templateVars = [
+            'recommendedEmail' => $recommendedEmail,
+            'confirmationUrl' => $this->urlBuilder->getUrl(Confirm::ROUTE, ['hash' => base64_encode($hash)]),
+            'senderName' => $senderName,
+        ];
+
         $this->temp_id = $this->getTemplateId($emailTemplateID);
         $this->inlineTranslation->suspend();
-        $this->generateTemplate($emailTemplateVariables, $senderInfo, $receiverInfo);
+        $this->generateTemplate($templateVars, $senderInfo, $receiverInfo);
         $transport = $this->_transportBuilder->getTransport();
         $transport->sendMessage();
         $this->inlineTranslation->resume();

@@ -30,26 +30,27 @@ class Add extends LoggedInAction implements HttpPostActionInterface
      */
     private $recommendationsRepository;
     /**
-     * @var UrlInterface
-     */
-    private $urlBuilder;
-
-    /**
-     *
+     * @var EmailHelper
      */
     private $emailHelper;
 
+    /**
+     * Add constructor.
+     * @param Context $context
+     * @param ConfigHelper $configHelper
+     * @param Session $customerSession
+     * @param EmailHelper $emailHelper
+     * @param RecommendationRepository $recommendationRepository
+     */
     public function __construct(
         Context $context,
         ConfigHelper $configHelper,
         Session $customerSession,
         EmailHelper $emailHelper,
-        RecommendationRepository $recommendationRepository,
-        UrlInterface $urlBuilder
+        RecommendationRepository $recommendationRepository
     )
     {
         $this->emailHelper = $emailHelper;
-        $this->urlBuilder = $urlBuilder;
         $this->recommendationsRepository = $recommendationRepository;
         parent::__construct($context, $configHelper, $customerSession);
     }
@@ -91,23 +92,7 @@ class Add extends LoggedInAction implements HttpPostActionInterface
         $hash = $this->recommendationsRepository->createRecommendation($customer, $recommendedEmail);
         if (!empty($hash)) {
             try {
-                $receiverInfo = [
-                    'name' => $recommendedEmail,
-                    'email' => $recommendedEmail
-                ];
-
-                $senderInfo = [
-                    'name' => 'Bulbulatory',
-                    'email' => 'bulbulatory@magento.pl',
-                ];
-
-                $templateVars = [
-                    'recommendedEmail' => $recommendedEmail,
-                    'confirmationUrl' => $this->urlBuilder->getUrl(Confirm::ROUTE, ['hash' => base64_encode($hash)]),
-                    'senderName' => $customer->getName(),
-                ];
-
-                $this->emailHelper->sendRecommendationEmail(self::XML_PATH_EMAIL_TEMPLATE_FIELD, $templateVars, $senderInfo, $receiverInfo);
+                $this->emailHelper->sendRecommendationEmail(self::XML_PATH_EMAIL_TEMPLATE_FIELD, $recommendedEmail, $customer->getName(), $hash);
                 return true;
             } catch (Exception $e) {
                 return false;

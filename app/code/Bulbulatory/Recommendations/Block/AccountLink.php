@@ -4,7 +4,7 @@
 namespace Bulbulatory\Recommendations\Block;
 
 
-use Bulbulatory\Recommendations\Helper\RecommendationsHelper;
+use Bulbulatory\Recommendations\Helper\ConfigHelper;
 use Magento\Framework\App\DefaultPathInterface;
 use Magento\Framework\View\Element\Html\Link\Current;
 use Magento\Framework\View\Element\Template\Context;
@@ -16,25 +16,25 @@ use Magento\Framework\View\Element\Template\Context;
 class AccountLink extends Current
 {
     /**
-     * @var RecommendationsHelper
+     * @var ConfigHelper
      */
-    private $recommendationsHelper;
+    private $configHelper;
 
     /**
      * AccountLink constructor.
      * @param Context $context
      * @param DefaultPathInterface $defaultPath
-     * @param RecommendationsHelper $recommendationsHelper
+     * @param ConfigHelper $configHelper
      * @param array $data
      */
     public function __construct(
         Context $context,
         DefaultPathInterface $defaultPath,
-        RecommendationsHelper $recommendationsHelper,
+        ConfigHelper $configHelper,
         array $data = []
     )
     {
-        $this->recommendationsHelper = $recommendationsHelper;
+        $this->configHelper = $configHelper;
         parent::__construct($context, $defaultPath, $data);
     }
 
@@ -44,7 +44,7 @@ class AccountLink extends Current
      */
     protected function _toHtml()
     {
-        if ($this->recommendationsHelper->isRecommendationsModuleEnabled()) {
+        if ($this->configHelper->isRecommendationsModuleEnabled()) {
             return parent::_toHtml();
         }
 

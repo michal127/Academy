@@ -3,7 +3,6 @@
 namespace Bulbulatory\Recommendations\Helper;
 
 use Magento\Framework\App\Area;
-use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Exception\LocalizedException;
@@ -11,21 +10,15 @@ use Magento\Framework\Exception\MailException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\Translate\Inline\StateInterface;
-use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
 /**
- * Class RecommendationsHelper
+ * Class EmailHelper
  * @package Bulbulatory\Recommendations\Helper
  */
-class RecommendationsHelper extends AbstractHelper
+class EmailHelper extends AbstractHelper
 {
-    /**
-     * @var ScopeConfigInterface
-     */
-    protected $_scopeConfig;
-
     /**
      * Store manager
      *
@@ -61,39 +54,12 @@ class RecommendationsHelper extends AbstractHelper
         TransportBuilder $transportBuilder
     )
     {
-        $this->_scopeConfig = $context;
         parent::__construct($context);
         $this->_storeManager = $storeManager;
         $this->inlineTranslation = $inlineTranslation;
         $this->_transportBuilder = $transportBuilder;
     }
 
-    /**
-     * Return store configuration
-     *
-     * @param string $path
-     * @param int $storeId
-     * @return mixed
-     */
-    public function getConfigValue(string $path, int $storeId)
-    {
-        return $this->scopeConfig->getValue(
-            $path,
-            ScopeInterface::SCOPE_STORE,
-            $storeId
-        );
-    }
-
-    /**
-     * Return store
-     *
-     * @return StoreInterface
-     * @throws NoSuchEntityException
-     */
-    public function getStore()
-    {
-        return $this->_storeManager->getStore();
-    }
 
     /**
      * Return template id according to store
@@ -104,7 +70,11 @@ class RecommendationsHelper extends AbstractHelper
      */
     public function getTemplateId(string $xmlPath)
     {
-        return $this->getConfigValue($xmlPath, $this->getStore()->getStoreId());
+        return $this->scopeConfig->getValue(
+            $xmlPath,
+            ScopeInterface::SCOPE_STORE,
+            $this->_storeManager->getStore()->getStoreId()
+        );
     }
 
     /**
@@ -112,7 +82,7 @@ class RecommendationsHelper extends AbstractHelper
      * @param array $emailTemplateVariables
      * @param array $senderInfo
      * @param array $receiverInfo
-     * @return RecommendationsHelper
+     * @return EmailHelper
      * @throws NoSuchEntityException
      */
     public function generateTemplate(array $emailTemplateVariables, array $senderInfo, array $receiverInfo)
@@ -148,17 +118,5 @@ class RecommendationsHelper extends AbstractHelper
         $transport = $this->_transportBuilder->getTransport();
         $transport->sendMessage();
         $this->inlineTranslation->resume();
-    }
-
-    /**
-     * @return bool enable configuration value of Bulbulatory_Recommendations module
-     */
-    public function isRecommendationsModuleEnabled()
-    {
-        try {
-            return (bool)$this->getConfigValue('recommendations/general/enable', $this->getStore()->getStoreId());
-        } catch (NoSuchEntityException $e) {
-            return false;
-        }
     }
 }

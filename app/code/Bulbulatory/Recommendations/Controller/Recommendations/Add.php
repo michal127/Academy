@@ -4,7 +4,8 @@
 namespace Bulbulatory\Recommendations\Controller\Recommendations;
 
 
-use Bulbulatory\Recommendations\Helper\RecommendationsHelper;
+use Bulbulatory\Recommendations\Helper\ConfigHelper;
+use Bulbulatory\Recommendations\Helper\EmailHelper;
 use Bulbulatory\Recommendations\Model\RecommendationRepository;
 use Exception;
 use Magento\Customer\Model\Customer;
@@ -13,7 +14,6 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpPostActionInterface as HttpPostActionInterface;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\UrlInterface;
-use Ramsey\Uuid\Uuid;
 
 /**
  * Class Add
@@ -34,17 +34,24 @@ class Add extends LoggedInAction implements HttpPostActionInterface
      */
     private $urlBuilder;
 
+    /**
+     *
+     */
+    private $emailHelper;
+
     public function __construct(
         Context $context,
-        RecommendationsHelper $recommendationsHelper,
+        ConfigHelper $configHelper,
         Session $customerSession,
+        EmailHelper $emailHelper,
         RecommendationRepository $recommendationRepository,
         UrlInterface $urlBuilder
     )
     {
+        $this->emailHelper = $emailHelper;
         $this->urlBuilder = $urlBuilder;
         $this->recommendationsRepository = $recommendationRepository;
-        parent::__construct($context, $recommendationsHelper, $customerSession);
+        parent::__construct($context, $configHelper, $customerSession);
     }
 
     /**
@@ -52,6 +59,7 @@ class Add extends LoggedInAction implements HttpPostActionInterface
      */
     protected function _execute(): ResultInterface
     {
+        $resultRedirect = $this->resultRedirectFactory->create();
         if ($this->isRecommendationModuleEnabled()) {
             $customer = $this->customerSession->getCustomer();
             $recommendedEmail = $this->getRequest()->getParam(self::POST_PARAM_EMAIL);
@@ -67,8 +75,9 @@ class Add extends LoggedInAction implements HttpPostActionInterface
             } else {
                 $this->messageManager->addSuccessMessage(__('Recommendation send successfully!'));
             }
+            return $resultRedirect->setPath(Index::ROUTE);
         }
-        return $this->resultRedirectFactory->create()->setPath(Index::ROUTE);
+        return $resultRedirect->setPath('/');
     }
 
     /**
@@ -79,12 +88,8 @@ class Add extends LoggedInAction implements HttpPostActionInterface
      */
     private function createRecommendation(Customer $customer, string $recommendedEmail)
     {
-        try {
-            $hash = Uuid::uuid4();
-        } catch (Exception $e) {
-            return false;
-        }
-        if ($this->recommendationsRepository->createRecommendation($customer, $recommendedEmail, $hash)) {
+        $hash = $this->recommendationsRepository->createRecommendation($customer, $recommendedEmail);
+        if (!empty($hash)) {
             try {
                 $receiverInfo = [
                     'name' => $recommendedEmail,
@@ -102,7 +107,7 @@ class Add extends LoggedInAction implements HttpPostActionInterface
                     'senderName' => $customer->getName(),
                 ];
 
-                $this->recommendationsHelper->sendRecommendationEmail(self::XML_PATH_EMAIL_TEMPLATE_FIELD, $templateVars, $senderInfo, $receiverInfo);
+                $this->emailHelper->sendRecommendationEmail(self::XML_PATH_EMAIL_TEMPLATE_FIELD, $templateVars, $senderInfo, $receiverInfo);
                 return true;
             } catch (Exception $e) {
                 return false;

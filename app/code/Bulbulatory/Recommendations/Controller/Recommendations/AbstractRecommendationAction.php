@@ -3,7 +3,7 @@
 
 namespace Bulbulatory\Recommendations\Controller\Recommendations;
 
-use Bulbulatory\Recommendations\Helper\RecommendationsHelper;
+use Bulbulatory\Recommendations\Helper\ConfigHelper;
 use Magento\Framework\App\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\ResponseInterface;
@@ -17,18 +17,18 @@ use Magento\Framework\Controller\ResultInterface;
 abstract class AbstractRecommendationAction extends Action\Action
 {
     /**
-     * @var RecommendationsHelper
+     * @var ConfigHelper
      */
-    protected $recommendationsHelper;
+    protected $configHelper;
 
     /**
      * AbstractRecommendationAction constructor.
      * @param Context $context
-     * @param RecommendationsHelper $recommendationsHelper
+     * @param ConfigHelper $configHelper
      */
-    public function __construct(Context $context, RecommendationsHelper $recommendationsHelper)
+    public function __construct(Context $context, ConfigHelper $configHelper)
     {
-        $this->recommendationsHelper = $recommendationsHelper;
+        $this->configHelper = $configHelper;
         parent::__construct($context);
     }
 
@@ -42,6 +42,6 @@ abstract class AbstractRecommendationAction extends Action\Action
      */
     protected function isRecommendationModuleEnabled()
     {
-        return $this->recommendationsHelper->isRecommendationsModuleEnabled();
+        return $this->configHelper->isRecommendationsModuleEnabled();
     }
 }

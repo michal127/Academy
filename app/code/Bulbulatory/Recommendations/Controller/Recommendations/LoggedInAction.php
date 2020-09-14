@@ -3,7 +3,7 @@
 
 namespace Bulbulatory\Recommendations\Controller\Recommendations;
 
-use Bulbulatory\Recommendations\Helper\RecommendationsHelper;
+use Bulbulatory\Recommendations\Helper\ConfigHelper;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\ResponseInterface;
@@ -22,13 +22,13 @@ abstract class LoggedInAction extends AbstractRecommendationAction
     /**
      * LoggedInAction constructor.
      * @param Context $context
-     * @param RecommendationsHelper $recommendationsHelper
+     * @param ConfigHelper $configHelper
      * @param Session $customerSession
      */
-    public function __construct(Context $context, RecommendationsHelper $recommendationsHelper, Session $customerSession)
+    public function __construct(Context $context, ConfigHelper $configHelper, Session $customerSession)
     {
         $this->customerSession = $customerSession;
-        parent::__construct($context, $recommendationsHelper);
+        parent::__construct($context, $configHelper);
     }
 
     /**

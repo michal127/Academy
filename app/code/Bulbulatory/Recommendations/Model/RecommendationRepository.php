@@ -10,6 +10,7 @@ use Exception;
 use Magento\Customer\Model\Customer;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Adapter\AdapterInterface;
+use Ramsey\Uuid\Uuid;
 
 /**
  * Class RecommendationRepository
@@ -76,12 +77,12 @@ class RecommendationRepository implements RecommendationRepositoryInterface
      * Create new recommendation record
      * @param Customer $customer
      * @param string $recommendedEmail
-     * @param string $hash
-     * @return bool
+     * @return string created recommendation hash
      */
-    public function createRecommendation(Customer $customer, string $recommendedEmail, string $hash)
+    public function createRecommendation(Customer $customer, string $recommendedEmail)
     {
         try {
+            $hash = Uuid::uuid4();
             $recommendation = $this->recommendationFactory->create();
             $recommendation->setData([
                 'email' => $recommendedEmail,
@@ -89,9 +90,9 @@ class RecommendationRepository implements RecommendationRepositoryInterface
                 'hash' => $hash
             ]);
             $this->recommendationResource->save($recommendation);
-            return true;
+            return $hash;
         } catch (Exception $e) {
-            return false;
+            return '';
         }
 
     }

@@ -3,7 +3,7 @@
 
 namespace Bulbulatory\Recommendations\Controller\Recommendations;
 
-use Bulbulatory\Recommendations\Helper\RecommendationsHelper;
+use Bulbulatory\Recommendations\Helper\ConfigHelper;
 use Bulbulatory\Recommendations\Model\RecommendationRepository;
 use Magento\Framework\App\Action\Context;
 
@@ -23,17 +23,17 @@ class Confirm extends AbstractRecommendationAction
     /**
      * Confirm constructor.
      * @param Context $context
-     * @param RecommendationsHelper $recommendationsHelper
+     * @param ConfigHelper $configHelper
      * @param RecommendationRepository $recommendationRepository
      */
     public function __construct(
         Context $context,
-        RecommendationsHelper $recommendationsHelper,
+        ConfigHelper $configHelper,
         RecommendationRepository $recommendationRepository
     )
     {
         $this->recommendationRepository = $recommendationRepository;
-        parent::__construct($context, $recommendationsHelper);
+        parent::__construct($context, $configHelper);
     }
 
     public function execute()

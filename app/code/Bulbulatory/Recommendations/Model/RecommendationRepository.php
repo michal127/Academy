@@ -66,7 +66,8 @@ class RecommendationRepository implements RecommendationRepositoryInterface
         $select = $this->connection->select()
             ->from(RecommendationResource::MAIN_TABLE)
             ->columns('COUNT(*) as count')
-            ->where('customer_id = ' . $customer->getId() . ' AND email = "' . $recommendedEmail . '"');
+            ->where('customer_id = ?', $customer->getId())
+            ->where('email = ?', $recommendedEmail);
 
         $result = $this->connection->fetchRow($select->assemble());
 

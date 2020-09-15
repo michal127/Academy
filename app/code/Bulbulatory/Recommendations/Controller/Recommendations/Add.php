@@ -4,8 +4,8 @@
 namespace Bulbulatory\Recommendations\Controller\Recommendations;
 
 
-use Bulbulatory\Recommendations\Helper\ConfigHelper;
-use Bulbulatory\Recommendations\Helper\EmailHelper;
+use Bulbulatory\Recommendations\Helper\Config;
+use Bulbulatory\Recommendations\Helper\Email;
 use Bulbulatory\Recommendations\Model\RecommendationRepository;
 use Exception;
 use Magento\Customer\Model\Customer;
@@ -30,7 +30,7 @@ class Add extends LoggedInAction implements HttpPostActionInterface
      */
     private $recommendationsRepository;
     /**
-     * @var EmailHelper
+     * @var Email
      */
     private $emailHelper;
     /**
@@ -41,17 +41,17 @@ class Add extends LoggedInAction implements HttpPostActionInterface
     /**
      * Add constructor.
      * @param Context $context
-     * @param ConfigHelper $configHelper
+     * @param Config $configHelper
      * @param Session $customerSession
-     * @param EmailHelper $emailHelper
+     * @param Email $emailHelper
      * @param RecommendationRepository $recommendationRepository
      * @param LoggerInterface $logger
      */
     public function __construct(
         Context $context,
-        ConfigHelper $configHelper,
+        Config $configHelper,
         Session $customerSession,
-        EmailHelper $emailHelper,
+        Email $emailHelper,
         RecommendationRepository $recommendationRepository,
         LoggerInterface $logger
     )

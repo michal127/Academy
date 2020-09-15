@@ -4,7 +4,7 @@
 namespace Bulbulatory\Recommendations\Block;
 
 
-use Bulbulatory\Recommendations\Helper\ConfigHelper;
+use Bulbulatory\Recommendations\Helper\Config;
 use Magento\Framework\App\DefaultPathInterface;
 use Magento\Framework\View\Element\Html\Link\Current;
 use Magento\Framework\View\Element\Template\Context;
@@ -16,7 +16,7 @@ use Magento\Framework\View\Element\Template\Context;
 class AccountLink extends Current
 {
     /**
-     * @var ConfigHelper
+     * @var Config
      */
     private $configHelper;
 
@@ -24,13 +24,13 @@ class AccountLink extends Current
      * AccountLink constructor.
      * @param Context $context
      * @param DefaultPathInterface $defaultPath
-     * @param ConfigHelper $configHelper
+     * @param Config $configHelper
      * @param array $data
      */
     public function __construct(
         Context $context,
         DefaultPathInterface $defaultPath,
-        ConfigHelper $configHelper,
+        Config $configHelper,
         array $data = []
     )
     {

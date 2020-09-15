@@ -9,6 +9,7 @@
         </referenceBlock>
         <referenceContainer name="content">
             <block class="Bulbulatory\Recommendations\Block\Index" name="bulbulatory_recommendations_recommendation_index" template="Bulbulatory_Recommendations::index.phtml" />
+            <block class="Bulbulatory\Recommendations\Block\RecommendationList" name="bulbulatory_recommendations_recommendation_list" template="Bulbulatory_Recommendations::recommendation_list.phtml" />
         </referenceContainer>
     </body>
 </page>

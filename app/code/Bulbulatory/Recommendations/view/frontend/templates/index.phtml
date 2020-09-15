@@ -1,0 +1,16 @@
+<?php
+/**
+ * @var $this \Bulbulatory\Recommendations\Block\Index
+ */
+?>
+<p><span><?= __('You can send recommendation of our shop to your friends!') ?></span></p>
+<p><span><?= __('In reward you will get extra discount for each friend that will enter our shop by your recommendation') ?></span></p>
+
+<form action="<?= $this->getFormActionUrl() ?>" method="post">
+    <label for="email"><?= __('Email address') ?></label>
+    <input id="email" type="email" name="<?= $this->getEmailInputName() ?>" style="max-width: 300px">
+    <input type="submit" value="<?= __('Send recommendation') ?>">
+</form>
+
+
+

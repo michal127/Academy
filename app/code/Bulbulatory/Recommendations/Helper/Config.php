@@ -11,10 +11,10 @@ use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
 /**
- * Class ConfigHelper
+ * Class Config
  * @package Bulbulatory\Recommendations\Helper
  */
-class ConfigHelper extends AbstractHelper
+class Config extends AbstractHelper
 {
     /**
      * @var StoreManagerInterface
@@ -22,7 +22,7 @@ class ConfigHelper extends AbstractHelper
     private $storeManager;
 
     /**
-     * ConfigHelper constructor.
+     * Config constructor.
      * @param Context $context
      * @param StoreManagerInterface $storeManager
      */

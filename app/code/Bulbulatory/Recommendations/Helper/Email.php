@@ -16,10 +16,10 @@ use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
 /**
- * Class EmailHelper
+ * Class Email
  * @package Bulbulatory\Recommendations\Helper
  */
-class EmailHelper extends AbstractHelper
+class Email extends AbstractHelper
 {
     /**
      * Store manager
@@ -91,7 +91,7 @@ class EmailHelper extends AbstractHelper
      * @param array $emailTemplateVariables
      * @param array $senderInfo
      * @param array $receiverInfo
-     * @return EmailHelper
+     * @return Email
      * @throws NoSuchEntityException
      */
     public function generateTemplate(array $emailTemplateVariables, array $senderInfo, array $receiverInfo)

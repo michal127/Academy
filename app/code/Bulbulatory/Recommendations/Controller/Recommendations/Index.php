@@ -4,7 +4,7 @@
 namespace Bulbulatory\Recommendations\Controller\Recommendations;
 
 
-use Bulbulatory\Recommendations\Helper\ConfigHelper;
+use Bulbulatory\Recommendations\Helper\Config;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\ResultInterface;
@@ -25,13 +25,13 @@ class Index extends LoggedInAction
     /**
      * Add constructor.
      * @param Context $context
-     * @param ConfigHelper $configHelper
+     * @param Config $configHelper
      * @param Session $customerSession
      * @param PageFactory $pageFactory
      */
     public function __construct(
         Context $context,
-        ConfigHelper $configHelper,
+        Config $configHelper,
         Session $customerSession,
         PageFactory $pageFactory
     )

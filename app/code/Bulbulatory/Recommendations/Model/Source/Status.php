@@ -10,8 +10,8 @@ use Magento\Framework\Option\ArrayInterface;
  */
 class Status implements ArrayInterface
 {
-    const STATUS_UNCONFIRMED_ENG = 'Unconfirmed';
-    const STATUS_CONFIRMED_ENG = 'Confirmed';
+    const STATUS_UNCONFIRMED = 'Unconfirmed';
+    const STATUS_CONFIRMED = 'Confirmed';
 
     /**
      * @return array|array[]
@@ -19,8 +19,8 @@ class Status implements ArrayInterface
     public function toOptionArray()
     {
         return [
-            ['value' => 0, 'label' => __(self::STATUS_UNCONFIRMED_ENG)],
-            ['value' => 1, 'label' => __(self::STATUS_CONFIRMED_ENG)]
+            ['value' => 0, 'label' => __(self::STATUS_UNCONFIRMED)],
+            ['value' => 1, 'label' => __(self::STATUS_CONFIRMED)]
         ];
     }
 }

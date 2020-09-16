@@ -17,6 +17,9 @@ use Magento\Framework\Phrase;
  */
 class Recommendation extends AbstractHelper
 {
+
+    const MAX_DISCOUNT_PERCENTAGE = 35;
+
     /**
      * @var RecommendationRepository
      */
@@ -40,13 +43,9 @@ class Recommendation extends AbstractHelper
      */
     public function getDiscountValueForCustomer(int $confirmedRecommendations)
     {
-        if ($confirmedRecommendations < 10) {
-            return 0;
-        } else if ($confirmedRecommendations < 20) {
-            return 10;
-        } else {
-            return 20;
-        }
+        $discount = floor($confirmedRecommendations / 10) * 5;  //add 5% of discount per each 10 recommendations
+
+        return ($discount <= self::MAX_DISCOUNT_PERCENTAGE) ? $discount : self::MAX_DISCOUNT_PERCENTAGE;
     }
 
     /**
@@ -59,10 +58,10 @@ class Recommendation extends AbstractHelper
         $statusName = '';
         switch ($statusID) {
             case 0:
-                $statusName = __(Status::STATUS_UNCONFIRMED_ENG);
+                $statusName = __(Status::STATUS_UNCONFIRMED);
                 break;
             case 1:
-                $statusName = __(Status::STATUS_CONFIRMED_ENG);
+                $statusName = __(Status::STATUS_CONFIRMED);
                 break;
         }
 

@@ -45,7 +45,7 @@ class Recommendation extends AbstractHelper
     {
         $discount = floor($confirmedRecommendations / 10) * 5;  //add 5% of discount per each 10 recommendations
 
-        return ($discount <= self::MAX_DISCOUNT_PERCENTAGE) ? $discount : self::MAX_DISCOUNT_PERCENTAGE;
+        return min($discount, self::MAX_DISCOUNT_PERCENTAGE);
     }
 
     /**

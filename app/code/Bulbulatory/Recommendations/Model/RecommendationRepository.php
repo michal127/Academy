@@ -125,4 +125,20 @@ class RecommendationRepository implements RecommendationRepositoryInterface
         );
         return $updatedRows > 0;
     }
+
+    /**
+     * @param Customer $customer
+     * @return int
+     */
+    public function getConfirmedRecommendationsCountForCustomer(Customer $customer)
+    {
+        $select = $this->connection->select()
+            ->from(RecommendationResource::MAIN_TABLE)
+            ->columns('COUNT(*) as count')
+            ->where('customer_id = ?', $customer->getId())
+            ->where('status = 1');
+        $result = $this->connection->fetchRow($select->assemble());
+
+        return (int)$result['count'];
+    }
 }

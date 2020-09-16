@@ -1,5 +1,10 @@
 # Bulbulatory_Recommendations module changelog
 
+## [1.0.5] - 2020-09-16
+### Added
+- Recommendation list for customer
+- Information about current discount from recommendations
+
 ## [1.0.4] - 2020-09-09
 ### Added
 - customer/recommendations/index action (recommendation form)

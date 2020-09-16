@@ -1,0 +1,61 @@
+<?php
+/**
+ * @var $this \Bulbulatory\Recommendations\Block\RecommendationList
+ */
+$recommendations = $this->getRecommendationsCollection();
+?>
+<div class="block block-dashboard-info">
+    <div class="block-title"><strong><?= __('Your recommendations') ?></strong></div>
+    <div class="block-content">
+        <?php if (count($recommendations) > 0): ?>
+            <div class="top-info" style="margin-bottom: 90px">
+                <div class="box">
+                    <strong class="box-title">
+                        <span><?= __('Confirmed recommendations') ?></span>
+                    </strong>
+                    <div class="box-content"><?= $this->getConfirmedRecommendationsCount() ?></div>
+                </div>
+                <div class="box">
+                    <strong class="box-title">
+                        <span><?= __('Your discount') ?></span>
+                    </strong>
+                    <div class="box-content"><strong><?= $this->getRecommendationDiscount() ?></strong></div>
+                </div>
+            </div>
+            <div class="toolbar bottom">
+                <?= $this->getPagerHtml(); ?>
+            </div>
+            <table class="data table table-order-items history" id="my-orders-table">
+                <caption class="table-caption"><?= __('Recommendations table') ?></caption>
+                <thead>
+                <tr>
+                    <th scope="col" class="col email"><?= __('Email') ?></th>
+                    <th scope="col" class="col status"><?= __('Status') ?></th>
+                    <th scope="col" class="col created_at"><?= __('Send at') ?></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php
+                foreach ($recommendations as $recommendation): ?>
+                    <tr>
+                        <td data-th="<?= __('Email') ?>" class="col email">
+                            <?= $recommendation['email'] ?>
+                        </td>
+                        <td data-th="<?= __('Status') ?>" class="col status">
+                            <?= $this->getRecommendationStatus((int)$recommendation['status']) ?>
+                        </td>
+                        <td data-th="<?= __('Send date') ?>" class="col created_at">
+                            <?= $recommendation['created_at'] ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php else: ?>
+            <p><span><?= __("You don't have any recommendations") ?></span></p>
+        <?php endif; ?>
+    </div>
+</div>
+
+
+

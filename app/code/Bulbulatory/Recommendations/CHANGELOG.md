@@ -1,5 +1,9 @@
 # Bulbulatory_Recommendations module changelog
 
+## [1.0.6] - 2020-09-17
+### Added
+- Discount for recommendations on checkout
+
 ## [1.0.5] - 2020-09-16
 ### Added
 - Recommendation list for customer

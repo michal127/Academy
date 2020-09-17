@@ -36,6 +36,7 @@ class RecommendationDiscount extends AbstractTotal
      * RecommendationDiscount constructor.
      * @param Session $session
      * @param RecommendationHelper $recommendationHelper
+     * @param Config $config
      */
     public function __construct(Session $session, RecommendationHelper $recommendationHelper, Config $config)
     {
@@ -69,7 +70,7 @@ class RecommendationDiscount extends AbstractTotal
         $discountAmount = "-" . ($totalAmount * $recommendationDiscount / 100);
         $appliedCartDiscount = 0;
 
-        $discountDescription = $total->getDiscountDescription();
+        $discountDescription = $quote->getDiscountDescription();
         if ($discountDescription) {
             $appliedCartDiscount = $total->getDiscountAmount();
             $discountAmount = $total->getDiscountAmount() + $discountAmount;

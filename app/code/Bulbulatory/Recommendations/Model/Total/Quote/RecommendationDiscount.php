@@ -58,39 +58,57 @@ class RecommendationDiscount extends AbstractTotal
     )
     {
         parent::collect($quote, $shippingAssignment, $total);
-        if (!$this->config->isRecommendationsModuleEnabled()) return $this;
+        $items = $shippingAssignment->getItems();
+        if (!count($items)) {
+            return $this;
+        }
+
+        if (!$this->config->isRecommendationsModuleEnabled()) {
+            return $this;
+        }
 
         $confirmedRecommendations = $this->recommendationHelper->getConfirmedRecommendationsCountForCustomer($this->customer);
         $recommendationDiscount = $this->recommendationHelper->getDiscountValueForCustomer($confirmedRecommendations);
-        if ($recommendationDiscount <= 0) return $this;
 
-        $discountLabel = __('Recommendations discount') . ' -' . $recommendationDiscount . '%';
+        if ($recommendationDiscount <= 0) {
+            return $this;
+        }
+
+        $discountLabel = __('Recommendations discount -%1%', $recommendationDiscount);
         $totalAmount = $total->getSubtotal();
 
         $discountAmount = "-" . ($totalAmount * $recommendationDiscount / 100);
-        $appliedCartDiscount = 0;
 
-        $discountDescription = $quote->getDiscountDescription();
-        if ($discountDescription) {
-            $appliedCartDiscount = $total->getDiscountAmount();
-            $discountAmount = $total->getDiscountAmount() + $discountAmount;
-            $discountLabel = $discountDescription . ', ' . $discountLabel;
-        }
+        $total->setRecommendationsDiscountDescription($discountLabel);
+        $total->setRecommendationsDiscountAmount($discountAmount);
 
-        $total->setDiscountDescription($discountLabel);
-        $total->setDiscountAmount($discountAmount);
-        $total->setBaseDiscountAmount($discountAmount);
-        $total->setSubtotalWithDiscount($total->getSubtotal() + $discountAmount);
-        $total->setBaseSubtotalWithDiscount($total->getBaseSubtotal() + $discountAmount);
 
-        if (isset($appliedCartDiscount)) {
-            $total->addTotalAmount($this->getCode(), $discountAmount - $appliedCartDiscount);
-            $total->addBaseTotalAmount($this->getCode(), $discountAmount - $appliedCartDiscount);
-        } else {
-            $total->addTotalAmount($this->getCode(), $discountAmount);
-            $total->addBaseTotalAmount($this->getCode(), $discountAmount);
-        }
+        $total->addTotalAmount($this->getCode(), $discountAmount);
+        $total->addBaseTotalAmount($this->getCode(), $discountAmount);
+
 
         return $this;
     }
+
+    /**
+     * @param Quote $quote
+     * @param Total $total
+     * @return array|null
+     */
+    public function fetch(Quote $quote, Total $total)
+    {
+        $result = null;
+        $amount = $total->getRecommendationsDiscountAmount();
+
+        if ($amount != 0) {
+            $description = $total->getRecommendationsDiscountDescription();
+            $result = [
+                'code' => $this->getCode(),
+                'title' => strlen($description) ? __('Discount (%1)', $description) : __('Discount'),
+                'value' => $amount
+            ];
+        }
+        return $result;
+    }
+
 }

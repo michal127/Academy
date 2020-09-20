@@ -6,7 +6,7 @@ namespace Bulbulatory\Recommendations\Model\Total\Quote;
 
 use Bulbulatory\Recommendations\Helper\Config;
 use Bulbulatory\Recommendations\Helper\Recommendation as RecommendationHelper;
-use Magento\Customer\Model\Customer;
+use Magento\Framework\Phrase;
 use Magento\Quote\Api\Data\ShippingAssignmentInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address\Total;
@@ -20,17 +20,13 @@ use Magento\Customer\Model\Session;
 class RecommendationDiscount extends AbstractTotal
 {
     /**
-     * @var RecommendationHelper
+     * @var int
      */
-    private $recommendationHelper;
+    private $recommendationDiscount = 0;
     /**
-     * @var Customer
+     * @var Phrase
      */
-    private $customer;
-    /**
-     * @var Config
-     */
-    private $config;
+    private $discountLabel = '';
 
     /**
      * RecommendationDiscount constructor.
@@ -40,9 +36,11 @@ class RecommendationDiscount extends AbstractTotal
      */
     public function __construct(Session $session, RecommendationHelper $recommendationHelper, Config $config)
     {
-        $this->customer = $session->getCustomer();
-        $this->recommendationHelper = $recommendationHelper;
-        $this->config = $config;
+        if ($config->isRecommendationsModuleEnabled()) {
+            $confirmedRecommendations = $recommendationHelper->getConfirmedRecommendationsCountForCustomer($session->getCustomer());
+            $this->recommendationDiscount = $recommendationHelper->getDiscountValueForCustomer($confirmedRecommendations);
+            $this->discountLabel = __('Recommendations discount -%1%', $this->recommendationDiscount);
+        }
     }
 
     /**
@@ -63,30 +61,14 @@ class RecommendationDiscount extends AbstractTotal
             return $this;
         }
 
-        if (!$this->config->isRecommendationsModuleEnabled()) {
+        if ($this->recommendationDiscount <= 0) {
             return $this;
         }
 
-        $confirmedRecommendations = $this->recommendationHelper->getConfirmedRecommendationsCountForCustomer($this->customer);
-        $recommendationDiscount = $this->recommendationHelper->getDiscountValueForCustomer($confirmedRecommendations);
 
-        if ($recommendationDiscount <= 0) {
-            return $this;
-        }
-
-        $discountLabel = __('Recommendations discount -%1%', $recommendationDiscount);
-        $totalAmount = $total->getSubtotal();
-
-        $discountAmount = "-" . ($totalAmount * $recommendationDiscount / 100);
-
-        $total->setRecommendationsDiscountDescription($discountLabel);
-        $total->setRecommendationsDiscountAmount($discountAmount);
-
-
+        $discountAmount = $this->getRecommendationDiscountAmount($total);
         $total->addTotalAmount($this->getCode(), $discountAmount);
         $total->addBaseTotalAmount($this->getCode(), $discountAmount);
-
-
         return $this;
     }
 
@@ -98,17 +80,24 @@ class RecommendationDiscount extends AbstractTotal
     public function fetch(Quote $quote, Total $total)
     {
         $result = null;
-        $amount = $total->getRecommendationsDiscountAmount();
 
-        if ($amount != 0) {
-            $description = $total->getRecommendationsDiscountDescription();
+        if ($this->recommendationDiscount > 0) {
             $result = [
                 'code' => $this->getCode(),
-                'title' => strlen($description) ? __('Discount (%1)', $description) : __('Discount'),
-                'value' => $amount
+                'title' => $this->discountLabel,
+                'value' => $this->getRecommendationDiscountAmount($total)
             ];
         }
         return $result;
+    }
+
+    /**
+     * @param Total $total
+     * @return string
+     */
+    private function getRecommendationDiscountAmount(Total $total)
+    {
+        return "-" . ($total->getSubtotal() * $this->recommendationDiscount / 100);
     }
 
 }

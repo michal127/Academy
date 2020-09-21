@@ -56,12 +56,12 @@ class RecommendationDiscount extends AbstractTotal
     )
     {
         parent::collect($quote, $shippingAssignment, $total);
-        $items = $shippingAssignment->getItems();
-        if (!count($items)) {
+
+        if ($this->recommendationDiscount <= 0) {
             return $this;
         }
 
-        if ($this->recommendationDiscount <= 0) {
+        if (!count($shippingAssignment->getItems())) {
             return $this;
         }
 

@@ -26,6 +26,11 @@ class Recommendation extends AbstractHelper
     private $recommendationRepository;
 
     /**
+     * @var int
+     */
+    private $customerRecommendationsCount;
+
+    /**
      * Recommendation constructor.
      * @param Context $context
      * @param RecommendationRepository $recommendationRepository
@@ -75,6 +80,9 @@ class Recommendation extends AbstractHelper
      */
     public function getConfirmedRecommendationsCountForCustomer(Customer $customer)
     {
-        return $this->recommendationRepository->getConfirmedRecommendationsCountForCustomer($customer);
+        if (!$this->customerRecommendationsCount) {
+            $this->customerRecommendationsCount = $this->recommendationRepository->getConfirmedRecommendationsCountForCustomer($customer);
+        }
+        return $this->customerRecommendationsCount;
     }
 }
